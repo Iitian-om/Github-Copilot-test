@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator</title>
+    <style>
+        body {
+            margin: 10px;
+            display: flex;
+            height: 100vh;
+            position: relative;
+            border-radius: 10px;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            border: 2px solid black;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .calculation-history {
+            width: 200px;
+            height: 400px;
+            overflow-y: auto;
+            margin-left: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+            border: 1px solid #444444;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .calculation-history h2 {
+            margin: 10px;
+            font-size: 16px;
+            color: #444444;
+        }
+
+        .calculation-history .history-content {
+            flex-grow: 1;
+            padding: 10px;
+        }
+
+        .calculation-history .history-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            gap: 10px;
+        }
+
+        .calculation-history .history-buttons button {
+            padding: 5px 10px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .calculation-history .history-buttons button:hover {
+            background-color: #45a049;
+        }
+
+        .calculator {
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            height: auto;
+            border: 1px solid #888787;
+            background: linear-gradient(145deg, #d4d4d4, #f0f0f0);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .display {
+            width: 100%;
+            height: 50px;
+            text-align: right;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 24px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: rgb(38, 38, 38);
+            color: #00FF00;
+            font-family: 'Digital-7', sans-serif;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .button {
+            padding: 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #d7d1d1;
+        }
+
+        .button.operator {
+            color: #fff;
+            background-color: #ff9500;
+        }
+
+        .button.operator:hover {
+            background-color: #e08900;
+        }
+
+        .advanced-calculator {
+            top: 50%;
+            right: 20px;
+            width: 400px;
+            height: auto;
+            display: none;
+            padding: 20px;
+            position: absolute;
+            border-radius: 10px;
+            border: 1px solid #888787;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(145deg, #d4d4d4, #f0f0f0);
+        }
+
+        .header {
+            top: 0;
+            left: 0;
+            height: 7%;
+            width: 98.6%;
+            padding: 10px;
+            display: flex;
+            border-radius: 7px;
+            position: absolute;
+            align-items: flex-start;
+            background-color: #333;
+            justify-content: space-between;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .heading h1 {
+            color: #fff;
+            font-size: 24px;
+        }
+
+        .header sub {
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="heading">
+            <h1><i>Cals Calculator</i><sub>by om kumar</sub></h1>
+        </div>
+    </header>
+
+    <div class="calculation-history" id="calculation-history">
+        <h2>History</h2>
+        <div class="history-content" id="history-content"></div>
+        <div class="history-buttons">
+            <button onclick="clearHistory()">Clear History</button>
+            <button onclick="clearAllHistory()">Clear All History</button>
+        </div>
+    </div>
+    <div class="calculator" z-index="1">
+        <input type="text" class="display" id="display" disabled>
+        <div class="buttons">
+            <button class="button" onclick="clearDisplay()">C</button>
+            <button class="button" onclick="deleteLast()">DEL</button>
+            <button class="button" onclick="appendToDisplay('%')">%</button>
+            <button class="button operator" onclick="appendToDisplay('/')">/</button>
+            <button class="button" onclick="appendToDisplay('1')">1</button>
+            <button class="button" onclick="appendToDisplay('2')">2</button>
+            <button class="button" onclick="appendToDisplay('3')">3</button>
+            <button class="button operator" onclick="appendToDisplay('*')">*</button>
+            <button class="button" onclick="appendToDisplay('4')">4</button>
+            <button class="button" onclick="appendToDisplay('5')">5</button>
+            <button class="button" onclick="appendToDisplay('6')">6</button>
+            <button class="button operator" onclick="appendToDisplay('-')">-</button>
+            <button class="button" onclick="appendToDisplay('7')">7</button>
+            <button class="button" onclick="appendToDisplay('8')">8</button>
+            <button class="button" onclick="appendToDisplay('9')">9</button>
+            <button class="button operator" onclick="appendToDisplay('+')">+</button>
+            <button class="button" onclick="calculateResult()" style="background-color: rgb(136, 136, 219);">=</button>
+            <button class="button" onclick="appendToDisplay('0')">0</button>
+            <button class="button" onclick="appendToDisplay('.')">.</button>
+            <button class="button" onclick="toggleAdvancedCalculator()">Advanced</button>
+        </div>
+    </div>
+
+    <div class="calculator advanced-calculator" id="advanced-calculator" z-index="1">
+        <div class="buttons">
+            <button class="button" onclick="appendToDisplay('Math.PI')">π</button>
+            <button class="button" onclick="appendToDisplay('Math.E')">e</button>
+            <button class="button" onclick="appendToDisplay('Math.sin(')">sin</button>
+            <button class="button" onclick="appendToDisplay('Math.cos(')">cos</button>
+            <button class="button" onclick="appendToDisplay('Math.tan(')">tan</button>
+            <button class="button" onclick="appendToDisplay('Math.log(')">ln</button>
+            <button class="button" onclick="appendToDisplay('Math.log10(')">log</button>
+            <button class="button" onclick="appendToDisplay('Math.asin(')">asin</button>
+            <button class="button" onclick="appendToDisplay('Math.acos(')">acos</button>
+            <button class="button" onclick="appendToDisplay('Math.atan(')">atan</button>
+            <button class="button" onclick="appendToDisplay('(')">(</button>
+            <button class="button" onclick="appendToDisplay(')')">)</button>
+            <button class="button" onclick="appendToDisplay('{')">{</button>
+            <button class="button" onclick="appendToDisplay('}')">}</button>
+            <button class="button" onclick="appendToDisplay('[')">[</button>
+            <button class="button" onclick="appendToDisplay(']')">]</button>
+        </div>
+    </div>
+
+
+    <script>
+        function appendToDisplay(value) {
+            document.getElementById('display').value += value;
+        }
+
+        function clearDisplay() {
+            let display = document.getElementById('display');
+            let historyContent = document.getElementById('history-content');
+            if (display.value !== '') {
+                let historyItem = document.createElement('div');
+                historyItem.textContent = display.value;
+                historyContent.appendChild(historyItem);
+            }
+            display.value = '';
+        }
+
+        function deleteLast() {
+            let display = document.getElementById('display');
+            display.value = display.value.slice(0, -1);
+        }
+
+        function calculateResult() {
+            let display = document.getElementById('display');
+            try {
+                display.value = eval(display.value);
+            } catch (e) {
+                display.value = 'Error';
+            }
+        }
+
+        function toggleAdvancedCalculator() {
+            let advancedCalculator = document.getElementById('advanced-calculator');
+            if (advancedCalculator.style.display === 'none' || advancedCalculator.style.display === '') {
+                advancedCalculator.style.display = 'block';
+            } else {
+                advancedCalculator.style.display = 'none';
+            }
+        }
+
+        function clearHistory() {
+            let historyContent = document.getElementById('history-content');
+            if (historyContent.lastChild) {
+                historyContent.removeChild(historyContent.lastChild);
+            }
+        }
+
+        function clearAllHistory() {
+            let historyContent = document.getElementById('history-content');
+            historyContent.innerHTML = '';
+        }
+
+        document.addEventListener('keydown', function(event) {
+            const key = event.key;
+            if (!isNaN(key) || ['+', '-', '*', '/', '.', '(', ')', '{', '}', '[', ']', '%'].includes(key)) {
+                appendToDisplay(key);
+            } else if (key === 'Enter') {
+                calculateResult();
+            } else if (key === 'Backspace') {
+                deleteLast();
+            } else if (key === 'Escape') {
+                clearDisplay();
+            }
+        });
+    </script>
+</body>
+
+</html>
